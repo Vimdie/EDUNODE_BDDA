@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.matiere }} – {{ course.classe }} | Professeur | Edunode{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav style="margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--text-muted);">
+    <a href="{{ url_for('dashboards.prof_courses') }}" style="color: var(--primary-color); text-decoration: none;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au dashboard
+    </a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <span>{{ course.matiere }}</span>
+</nav>
+
+<!-- Header du cours -->
+<div
+    style="background: linear-gradient(135deg, var(--primary-color), #7c3aed); border-radius: var(--border-radius-lg); padding: 2rem; color: white; margin-bottom: 2rem; position: relative; overflow: hidden;">
+    <div
+        style="position: absolute; top: -30px; right: -30px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+    </div>
+    <div
+        style="position: absolute; bottom: -60px; right: 100px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+    </div>
+    <div style="position: relative; z-index: 1;">
+        <div
+            style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span
+                    style="background: rgba(255,255,255,0.2); border-radius: 9999px; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.75rem; display: inline-block;">
+                    <i class="fa-solid fa-sitemap"></i> {{ course.filiere }} — {{ course.semestre }}
+                </span>
+                <h1 style="color: white; font-size: 1.75rem; margin-bottom: 0.5rem;">{{ course.matiere }}</h1>
+                <p style="opacity: 0.85; margin: 0;">{{ course.description or 'Aucune description disponible.' }}</p>
+            </div>
+            <div style="text-align: right;">
+                <span
+                    style="background: rgba(255,255,255,0.15); border-radius: var(--border-radius-md); padding: 0.5rem 1rem; display: inline-block;">
+                    <i class="fa-solid fa-users"></i> Classe : <strong>{{ course.classe }}</strong>
+                </span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+            <div><span style="opacity:0.7; font-size:0.8rem">MODE</span><br><strong>{{ course.mode_cours or 'N/A'
+                    }}</strong></div>
+            <div><span style="opacity:0.7; font-size:0.8rem">VOLUME HORAIRE</span><br><strong>{{ course.volume_horaire
+                    or 'N/A' }}h</strong></div>
+            <div><span style="opacity:0.7; font-size:0.8rem">CRÉDITS</span><br><strong>{{ course.credit }}</strong>
+            </div>
+            <div><span style="opacity:0.7; font-size:0.8rem">ANNÉE</span><br><strong>{{ course.annee }}</strong></div>
+            {% if moyenne_classe is not none %}
+            <div><span style="opacity:0.7; font-size:0.8rem">MOYENNE CLASSE</span><br>
+                <strong style="font-size:1.2rem;">{{ moyenne_classe }}/20</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<div
+    style="display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1px; overflow-x: auto;">
+    <button onclick="showTab('tab-evaluations')" class="tab-btn active" id="btn-tab-evaluations">
+        <i class="fa-solid fa-clipboard-list"></i> Évaluations
+    </button>
+    <button onclick="showTab('tab-notes')" class="tab-btn" id="btn-tab-notes">
+        <i class="fa-solid fa-pen-to-square"></i> Saisie des Notes
+    </button>
+    <button onclick="showTab('tab-classement')" class="tab-btn" id="btn-tab-classement">
+        <i class="fa-solid fa-trophy"></i> Classement
+    </button>
+    <button onclick="showTab('tab-statistiques')" class="tab-btn" id="btn-tab-statistiques">
+        <i class="fa-solid fa-chart-bar"></i> Statistiques
+    </button>
+</div>
+
+<style>
+    .tab-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        white-space: nowrap;
+        margin-bottom: -3px;
+        font-family: var(--font-family);
+    }
+
+    .tab-btn:hover {
+        color: var(--primary-color);
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-panel {
+        display: none;
+    }
+
+    .tab-panel.active {
+        display: block;
+    }
+</style>
+
+<!-- ─── TAB 1: ÉVALUATIONS ─── -->
+<div id="tab-evaluations" class="tab-panel active">
+    <div class="dashboard-grid">
+        <!-- Créer une évaluation -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-plus-circle"></i> Nouvelle Évaluation</h3>
+            </div>
+            <form method="POST" action="{{ url_for('dashboards.add_evaluation', ens_id=course.id) }}">
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-tag"></i> Type d'évaluation</label>
+                    <select name="type_eval" class="form-control" required>
+                        <option value="">-- Choisir --</option>
+                        <option value="Examen Final">Examen Final</option>
+                        <option value="Devoir">Devoir</option>
+                        <option value="Contrôle Continu">Contrôle Continu</option>
+                        <option value="TP">TP</option>
+                        <option value="Projet">Projet</option>
+                        <option value="Oral">Oral</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-weight-scale"></i> Coefficient</label>
+                    <input type="number" name="coefficient" class="form-control" value="1" min="0.5" max="5" step="0.5"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Date d'évaluation</label>
+                    <input type="date" name="date_eval" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-block">
+                    <i class="fa-solid fa-plus"></i> Créer l'évaluation
+                </button>
+            </form>
+        </div>
+
+        <!-- Liste des évaluations existantes -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-list"></i> Évaluations existantes</h3>
+                <span class="badge badge-info">{{ evaluations|length }}</span>
+            </div>
+            {% if evaluations %}
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+                {% for eval in evaluations %}
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--bg-color); border-radius: var(--border-radius-md); border: 1px solid var(--border-color);">
+                    <div>
+                        <strong>{{ eval.type }}</strong>
+                        <div class="text-muted" style="font-size: 0.8rem;">
+                            <i class="fa-solid fa-calendar"></i> {{ eval.date }} &nbsp;
+                            <i class="fa-solid fa-weight-scale"></i> Coef. {{ eval.coefficient }}
+                        </div>
+                    </div>
+                    <a href="{{ url_for('dashboards.course_detail', ens_id=course.id, eval_id=eval.id) }}"
+                        class="btn btn-outline" style="font-size:0.8rem; padding: 0.3rem 0.7rem;"
+                        onclick="setTimeout(()=>showTab('tab-notes'),100)">
+                        <i class="fa-solid fa-pen"></i> Saisir notes
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fa-solid fa-clipboard" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                <p>Aucune évaluation créée pour ce cours.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ─── TAB 2: SAISIE DES NOTES ─── -->
+<div id="tab-notes" class="tab-panel">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-pen-to-square"></i> Saisie / Modification des Notes</h3>
+        </div>
+
+        {% if not evaluations %}
+        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 0.75rem;"></i>
+            <p>Créez d'abord une évaluation avant de saisir des notes.</p>
+            <button onclick="showTab('tab-evaluations')" class="btn btn-outline mt-2">
+                <i class="fa-solid fa-plus"></i> Créer une évaluation
+            </button>
+        </div>
+        {% else %}
+        <!-- Sélection de l'évaluation -->
+        <div style="margin-bottom: 1.5rem;">
+            <label class="form-label">Évaluation ciblée :</label>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                {% for eval in evaluations %}
+                <a href="{{ url_for('dashboards.course_detail', ens_id=course.id, eval_id=eval.id) }}"
+                    onclick="localStorage.setItem('activeTab','tab-notes')"
+                    class="btn {% if selected_eval_id == eval.id %}{% else %}btn-outline{% endif %}"
+                    style="font-size: 0.85rem;">
+                    {{ eval.type }} ({{ eval.date }})
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if selected_eval_id %}
+        <form method="POST" action="{{ url_for('dashboards.saisie_notes', eval_id=selected_eval_id) }}">
+            <input type="hidden" name="ens_id" value="{{ course.id }}">
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border-color);">
+                        <th
+                            style="padding: 0.75rem; text-align: left; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                            Matricule</th>
+                        <th
+                            style="padding: 0.75rem; text-align: left; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                            Étudiant</th>
+                        <th
+                            style="padding: 0.75rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                            Note actuelle</th>
+                        <th
+                            style="padding: 0.75rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+                            Nouvelle note /20</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 0.75rem;"><code>{{ student.matricule }}</code></td>
+                        <td style="padding: 0.75rem; font-weight: 600;">{{ student.nom }} {{ student.prenom }}</td>
+                        <td style="padding: 0.75rem; text-align: center;">
+                            {% if student.note is not none %}
+                            {% if student.note >= 10 %}
+                            <span class="badge badge-success" style="font-size:1rem;">{{ student.note }}</span>
+                            {% else %}
+                            <span class="badge badge-danger" style="font-size:1rem;">{{ student.note }}</span>
+                            {% endif %}
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.75rem; text-align: center;">
+                            <input type="number" name="note_{{ student.inscription_id }}" class="form-control"
+                                style="width: 100px; margin: 0 auto; text-align: center;" min="0" max="20" step="0.25"
+                                value="{{ student.note if student.note is not none else '' }}" placeholder="/20">
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted" style="padding: 2rem;">Aucun étudiant inscrit
+                            dans cette classe.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if students %}
+            <div style="margin-top: 1.5rem; text-align: right;">
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-floppy-disk"></i> Enregistrer toutes les notes
+                </button>
+            </div>
+            {% endif %}
+        </form>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- ─── TAB 3: CLASSEMENT ─── -->
+<div id="tab-classement" class="tab-panel">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa-solid fa-trophy"></i> Classement de la Classe</h3>
+            <span class="text-muted" style="font-size: 0.85rem;">Basé sur la moyenne des évaluations du cours</span>
+        </div>
+        {% if ranking %}
+        <table style="width:100%; border-collapse: collapse; margin-top: 1rem;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border-color);">
+                    <th
+                        style="padding: 0.75rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; width: 60px;">
+                        Rang</th>
+                    <th
+                        style="padding: 0.75rem; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+                        Étudiant</th>
+                    <th
+                        style="padding: 0.75rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+                        Évaluations</th>
+                    <th
+                        style="padding: 0.75rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+                        Moyenne</th>
+                    <th
+                        style="padding: 0.75rem; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+                        Progression</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in ranking %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 1rem 0.75rem; text-align: center;">
+                        {% if loop.index == 1 %}
+                        <span style="font-size: 1.5rem;">🥇</span>
+                        {% elif loop.index == 2 %}
+                        <span style="font-size: 1.5rem;">🥈</span>
+                        {% elif loop.index == 3 %}
+                        <span style="font-size: 1.5rem;">🥉</span>
+                        {% else %}
+                        <span style="font-weight: 700; color: var(--text-muted);">{{ loop.index }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem 0.75rem;">
+                        <strong>{{ student.nom }} {{ student.prenom }}</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ student.matricule }}</div>
+                    </td>
+                    <td style="padding: 1rem 0.75rem; text-align: center;">{{ student.nb_notes }}</td>
+                    <td style="padding: 1rem 0.75rem; text-align: center;">
+                        {% if student.moyenne >= 10 %}
+                        <span class="badge badge-success" style="font-size: 1rem;">{{ student.moyenne }}/20</span>
+                        {% else %}
+                        <span class="badge badge-danger" style="font-size: 1rem;">{{ student.moyenne }}/20</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div
+                                style="flex: 1; background: var(--border-color); border-radius: 9999px; height: 8px; overflow: hidden;">
+                                <div style="height: 8px; width: {{ (student.moyenne / 20 * 100)|round }}%; 
+                                            background: {{ 'var(--success)' if student.moyenne >= 10 else 'var(--danger)' }}; 
+                                            border-radius: 9999px; transition: width 0.5s ease;"></div>
+                            </div>
+                            <span style="font-size: 0.8rem; color: var(--text-muted); min-width: 35px;">{{
+                                (student.moyenne / 20 * 100)|round }}%</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <i class="fa-solid fa-chart-bar" style="font-size: 2rem; margin-bottom: 0.75rem;"></i>
+            <p>Aucune note enregistrée pour afficher le classement.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ─── TAB 4: STATISTIQUES ─── -->
+<div id="tab-statistiques" class="tab-panel">
+    <div class="dashboard-grid">
+        <!-- Distribution des notes -->
+        <div class="card" style="max-height: 400px; display: flex; flex-direction: column;">
+            <h3 class="card-title"><i class="fa-solid fa-chart-bar"></i> Distribution des Notes</h3>
+            <div style="flex: 1; position: relative;">
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Statistiques résumé -->
+        <div class="card">
+            <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Résumé Statistique</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                <div class="stat-card" style="border: none; background: var(--bg-color); padding: 1rem;">
+                    <div class="stat-icon success"><i class="fa-solid fa-star"></i></div>
+                    <div class="stat-content">
+                        <h4>Moyenne Classe</h4>
+                        <span class="stat-value">{{ moyenne_classe if moyenne_classe is not none else 'N/A' }}/20</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border: none; background: var(--bg-color); padding: 1rem;">
+                    <div class="stat-icon primary"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-content">
+                        <h4>Étudiants au total</h4>
+                        <span class="stat-value">{{ students|length }}</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border: none; background: var(--bg-color); padding: 1rem;">
+                    <div class="stat-icon warning"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <div class="stat-content">
+                        <h4>Évaluations</h4>
+                        <span class="stat-value">{{ evaluations|length }}</span>
+                    </div>
+                </div>
+                {% set admis = ranking | selectattr('moyenne', '>=', 10) | list %}
+                <div class="stat-card" style="border: none; background: var(--bg-color); padding: 1rem;">
+                    <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-content">
+                        <h4>Taux de réussite</h4>
+                        <span class="stat-value">
+                            {% if ranking|length > 0 %}
+                            {{ ((admis|length / ranking|length) * 100)|round|int }}%
+                            {% else %}N/A{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // ── Tab logic ──
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById('btn-' + tabId).classList.add('active');
+        localStorage.setItem('activeTab', tabId);
+    }
+
+    // Restore tab from localStorage or URL param
+    window.addEventListener('DOMContentLoaded', () => {
+        const saved = localStorage.getItem('activeTab');
+        {% if request.args.get('eval_id') %}
+        showTab('tab-notes');
+        localStorage.setItem('activeTab', 'tab-notes');
+        {% elif saved %}
+        showTab(saved);
+        {% endif %}
+    });
+
+    // ── Chart.js – Distribution ──
+    const distData = {{ distribution | tojson | safe }};
+    const labels = Object.keys(distData);
+    const values = Object.values(distData);
+    const colors = ['#ef4444', '#f59e0b', '#10b981', '#4f46e5'];
+
+    const getRootVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const ctx = document.getElementById('distributionChart')?.getContext('2d');
+    let chart;
+
+    function initChart() {
+        if (!ctx) return;
+        if (chart) chart.destroy();
+        const textColor = getRootVar('--text-main') || '#0f172a';
+        const borderColor = getRootVar('--border-color') || '#e2e8f0';
+
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre d\'élèves',
+                    data: values,
+                    backgroundColor: colors.map(c => c + 'cc'),
+                    borderColor: colors,
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor }, grid: { color: borderColor } },
+                    x: { ticks: { color: textColor }, grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    if (values.some(v => v > 0)) {
+        initChart();
+        window.addEventListener('themeChanged', initChart);
+    } else if (ctx) {
+        ctx.canvas.parentElement.innerHTML = '<p class="text-muted text-center" style="padding:3rem;">Pas encore de données.</p>';
+    }
+</script>
+{% endblock %}

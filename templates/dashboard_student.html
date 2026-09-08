@@ -1,0 +1,663 @@
+{% extends 'base.html' %}
+{% block title %}Espace Étudiant – {{ student.prenom }} {{ student.nom }} | Edunode{% endblock %}
+
+{% block content %}
+<style>
+    /* ── HERO BANNER ── */
+    .student-hero {
+        background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem 2.5rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .student-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+    }
+
+    .student-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -60px;
+        right: 120px;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+    }
+
+    .student-avatar {
+        width: 72px;
+        height: 72px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+        border: 3px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .student-meta {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .student-meta h1 {
+        color: white;
+        margin: 0 0 0.25rem 0;
+        font-size: 1.5rem;
+    }
+
+    .student-meta p {
+        opacity: 0.9;
+        margin: 0;
+        font-size: 0.95rem;
+        font-family: monospace;
+    }
+
+    .student-info-pills {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .student-pill {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 9999px;
+        padding: 0.3rem 0.9rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        backdrop-filter: blur(4px);
+    }
+
+    .pill-accent {
+        background: white;
+        color: #3b82f6;
+        border: none;
+        font-weight: 700;
+    }
+
+    /* ── TABS NAVIGATION ── */
+    .custom-tabs {
+        display: flex;
+        gap: 1rem;
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+        color: var(--primary-color);
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-pane {
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .tab-pane.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── QUICK STATS ── */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .qs-card {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .qs-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .qs-card-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+    }
+
+    .qs-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
+
+    .qs-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .qs-subtext {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: block;
+        margin-top: 0.25rem;
+    }
+
+    .qs-icon {
+        position: absolute;
+        right: 1rem;
+        top: 1.25rem;
+        font-size: 1.5rem;
+        opacity: 0.2;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-container {
+        width: 100%;
+        height: 8px;
+        background: var(--border-color);
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 1s ease-out;
+    }
+
+    @media (max-width: 768px) {
+        .hide-mobile {
+            display: none;
+        }
+
+        .student-hero {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .student-info-pills {
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- ── HERO BANNER ── -->
+<div class="student-hero" id="profil">
+    <div class="student-avatar">
+        {% if student.sexe == 'F' %}
+        <i class="fa-solid fa-person-dress"></i>
+        {% else %}
+        <i class="fa-solid fa-person"></i>
+        {% endif %}
+    </div>
+    <div class="student-meta">
+        <h1>{{ student.prenom }} {{ student.nom }}</h1>
+        <p><i class="fa-solid fa-hashtag" style="font-size: 0.8rem;"></i> {{ student.matricule }}</p>
+        <div class="student-info-pills">
+            <span class="student-pill"><i class="fa-regular fa-envelope"></i> {{ student.email }}</span>
+            <span class="student-pill pill-accent"><i class="fa-solid fa-school"></i> {{ student.classe or 'Sans Classe'
+                }} – {{ student.filiere or '—' }}</span>
+            <span class="student-pill"><i class="fa-solid fa-flag"></i> {{ student.nationalite or 'Non précisée'
+                }}</span>
+            {% if student.boursier %}
+            <span class="student-pill" style="background: var(--warning); color:#fff; border-color: transparent;"><i
+                    class="fa-solid fa-sack-dollar"></i> Étudiant Boursier</span>
+            {% else %}
+            <span class="student-pill"><i class="fa-solid fa-sack-xmark"></i> Non Boursier</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ── TABS NAVIGATION ── -->
+<div class="custom-tabs">
+    <button class="tab-btn active" onclick="switchTab('synthese')"><i class="fa-solid fa-chart-line"></i> Synthèse &
+        Profil</button>
+    <button class="tab-btn" onclick="switchTab('programme')"><i class="fa-solid fa-book-open-reader"></i> Mon
+        Programme</button>
+    <button class="tab-btn" onclick="switchTab('notes_tab')" id="tab-notes"><i class="fa-solid fa-list-check"></i> Mes
+        Notes</button>
+</div>
+
+<!-- ============================================== -->
+<!-- ── TAB 1 : SYNTHÈSE & PROFIL ── -->
+<!-- ============================================== -->
+<div id="synthese" class="tab-pane active">
+    <!-- ── QUICK STATS ── -->
+    <div class="quick-stats">
+        <!-- Crédits Progress -->
+        <div class="qs-card">
+            <div class="qs-card-accent" style="background: var(--info);"></div>
+            <i class="fa-solid fa-graduation-cap qs-icon" style="color: var(--info);"></i>
+            <div class="qs-label">Crédits ECTS validés</div>
+            <div class="qs-value" style="color: var(--info);">{{ credits_stats.valides|int }} <span
+                    style="font-size:1rem; color:var(--text-muted); font-weight: 400;">/ {{ credits_stats.total|int
+                    }}</span></div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {{ credits_stats.pourcentage }}%; background: var(--info);">
+                </div>
+            </div>
+            <span class="qs-subtext">{{ credits_stats.pourcentage }}% d'achèvement annuel</span>
+        </div>
+        <!-- Moyenne -->
+        <div class="qs-card">
+            <div class="qs-card-accent" style="background: var(--primary-color);"></div>
+            <i class="fa-solid fa-star qs-icon" style="color: var(--primary-color);"></i>
+            <div class="qs-label">Moyenne Générale</div>
+            {% if stats.moyenne >= 10 %}
+            <div class="qs-value" style="color: var(--success);">{{ stats.moyenne }} / 20</div>
+            {% elif stats.moyenne > 0 %}
+            <div class="qs-value" style="color: var(--danger);">{{ stats.moyenne }} / 20</div>
+            {% else %}
+            <div class="qs-value text-muted">N/A</div>
+            {% endif %}
+            <span class="qs-subtext">Basée sur les évaluations notées</span>
+        </div>
+        <!-- Classement -->
+        <div class="qs-card">
+            <div class="qs-card-accent" style="background: var(--warning);"></div>
+            <i class="fa-solid fa-trophy qs-icon" style="color: var(--warning);"></i>
+            <div class="qs-label">Classement ({{ student.classe }})</div>
+            <div class="qs-value">{{ ranking.rang|default('-') }} <span
+                    style="font-size:1rem; color:var(--text-muted); font-weight: 400;">/ {{ ranking.total|default('-')
+                    }}</span></div>
+            <span class="qs-subtext">Votre position dans la promotion</span>
+        </div>
+    </div>
+
+    <!-- ── Graphiques & Infos Personnelles ── -->
+    <div class="card" style="display: flex; gap: 2rem; align-items: stretch; flex-wrap: wrap; margin-bottom: 2rem;">
+        <div style="flex: 2; min-width: 300px; display: flex; flex-direction: column;">
+            <h3 class="card-title"><i class="fa-solid fa-chart-pie" style="color: var(--info);"></i> Évolution des
+                moyennes par matière</h3>
+            <div style="flex: 1; position: relative; min-height: 250px; margin-top: 1rem;">
+                <canvas id="notesChart"></canvas>
+            </div>
+        </div>
+
+        <div style="width: 1px; background: var(--border-color); margin: 0 1rem;" class="hide-mobile"></div>
+
+        <div style="flex: 1; min-width: 250px;" id="profil">
+            <h3 class="card-title" style="margin-bottom: 1.5rem;"><i class="fa-solid fa-address-card"
+                    style="color: var(--secondary-color);"></i> Mes Coordonnées</h3>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div>
+                    <span class="qs-label" style="display: block; margin-bottom: 0.25rem;">Date de Naissance</span>
+                    <strong style="color: var(--text-main); font-size: 1rem;"><i class="fa-regular fa-calendar"
+                            style="color: var(--info); margin-right: 0.5rem; width: 16px;"></i> {{
+                        student.date_naissance }}</strong>
+                </div>
+                <div>
+                    <span class="qs-label" style="display: block; margin-bottom: 0.25rem;">Téléphone</span>
+                    <strong style="color: var(--text-main); font-size: 1rem;"><i class="fa-solid fa-phone"
+                            style="color: var(--success); margin-right: 0.5rem; width: 16px;"></i> {{ student.telephone
+                        or 'Non renseigné' }}</strong>
+                </div>
+                <div>
+                    <span class="qs-label" style="display: block; margin-bottom: 0.25rem;">Sexe</span>
+                    <strong style="color: var(--text-main); font-size: 1rem;">
+                        {% if student.sexe == 'F' %}
+                        <i class="fa-solid fa-venus" style="color: #ec4899; margin-right: 0.5rem; width: 16px;"></i>
+                        Féminin
+                        {% else %}
+                        <i class="fa-solid fa-mars" style="color: #3b82f6; margin-right: 0.5rem; width: 16px;"></i>
+                        Masculin
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+
+            <button class="btn btn-outline btn-block mt-2" style="margin-top: 2rem;" onclick="openProfileModal()">
+                <i class="fa-solid fa-pen"></i> Modifier mon profil
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ── MODAL : MODIFIER MON PROFIL ── -->
+<!-- ============================================== -->
+<div id="profileModal" class="modal"
+    style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-content"
+        style="background-color: var(--surface-color); margin: 10% auto; padding: 2rem; border-radius: var(--border-radius-lg); width: 90%; max-width: 500px; position: relative;">
+        <span class="close-modal" onclick="closeProfileModal()"
+            style="color: var(--text-muted); float: right; font-size: 1.5rem; font-weight: bold; cursor: pointer;">&times;</span>
+        <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-user-pen" style="color: var(--primary-color);"></i>
+            Modifier mon profil</h2>
+        <form action="{{ url_for('dashboards.update_student_profile') }}" method="POST">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="telephone" style="display: block; margin-bottom: 0.5rem; color: var(--text-main);">Numéro de
+                    téléphone</label>
+                <input type="text" id="telephone" name="telephone" value="{{ student.telephone or '' }}"
+                    class="form-control"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--bg-color); color: var(--text-main);">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="date_naissance" style="display: block; margin-bottom: 0.5rem; color: var(--text-main);">Date
+                    de naissance</label>
+                <input type="date" id="date_naissance" name="date_naissance" value="{{ student.date_naissance or '' }}"
+                    class="form-control"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--bg-color); color: var(--text-main);">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="sexe" style="display: block; margin-bottom: 0.5rem; color: var(--text-main);">Sexe</label>
+                <select id="sexe" name="sexe" class="form-control"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--bg-color); color: var(--text-main);">
+                    <option value="M" {% if student.sexe=='M' %}selected{% endif %}>Masculin</option>
+                    <option value="F" {% if student.sexe=='F' %}selected{% endif %}>Féminin</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="nationalite"
+                    style="display: block; margin-bottom: 0.5rem; color: var(--text-main);">Nationalité</label>
+                <input type="text" id="nationalite" name="nationalite" value="{{ student.nationalite or '' }}"
+                    class="form-control"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background: var(--bg-color); color: var(--text-main);">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                <button type="button" class="btn btn-outline" onclick="closeProfileModal()">Annuler</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openProfileModal() {
+        document.getElementById('profileModal').style.display = 'block';
+    }
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+    }
+    // Close modal when clicking outside of it
+    window.onclick = function (event) {
+        var modal = document.getElementById('profileModal');
+        if (event.target == modal) {
+            closeProfileModal();
+        }
+    }
+</script>
+
+<!-- ============================================== -->
+<!-- ── TAB 2 : MON PROGRAMME (Grille) ── -->
+<!-- ============================================== -->
+<div id="programme" class="tab-pane">
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3 class="card-title" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-book-open"
+                style="color: var(--secondary-color);"></i> Programme Edunode ({{ student.classe }})</h3>
+        <p class="text-muted" style="margin-bottom: 1.5rem; font-size: 0.85rem;">Voici la liste exhaustive des matières
+            et modules que vous devez valider cette année.</p>
+
+        <table class="datatable display responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Semestre</th>
+                    <th>Matière / Module</th>
+                    <th>Volume Horaire</th>
+                    <th>Crédits ECTS</th>
+                    <th>Professeur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in program %}
+                <tr>
+                    <td><span class="badge badge-outline"><i class="fa-solid fa-calendar-day"></i> {{ p.semestre
+                            }}</span></td>
+                    <td><strong>{{ p.matiere }}</strong></td>
+                    <td>{{ p.volume_horaire }}h</td>
+                    <td><span class="badge badge-info" style="font-weight: 700;">{{ p.credits|int }}</span></td>
+                    <td><span class="text-muted"><i class="fa-solid fa-user-tie"></i> {{ p.professeur }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted" style="padding: 3rem;">
+                        <i class="fa-solid fa-ghost"
+                            style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i><br>
+                        Aucun programme n'a été défini pour votre classe.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ── TAB 3 : MES NOTES ── -->
+<!-- ============================================== -->
+<div id="notes_tab" class="tab-pane" style="scroll-margin-top: 100px;">
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3 class="card-title" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-file-contract"
+                style="color: var(--success);"></i> Relevés d'évaluations</h3>
+        <p class="text-muted" style="margin-bottom: 1.5rem; font-size: 0.85rem;">Consultez vos notes détaillées pour
+            chaque évaluation passée.</p>
+
+        <table class="datatable display responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Matière</th>
+                    <th>Évaluation</th>
+                    <th>Note (/20)</th>
+                    <th>Statut de Validation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                <tr>
+                    <td><strong>{{ note.matiere }}</strong></td>
+                    <td><span class="badge badge-info">{{ note.evaluation }}</span></td>
+                    <td>
+                        {% if note.note >= 10 %}
+                        <span class="badge badge-success" style="font-size: 0.9rem; padding: 0.3rem 0.75rem;">{{
+                            note.note }}</span>
+                        {% else %}
+                        <span class="badge badge-danger" style="font-size: 0.9rem; padding: 0.3rem 0.75rem;">{{
+                            note.note }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if note.valide|lower == 'oui' %}
+                        <span
+                            style="color: var(--success); font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;"><i
+                                class="fa-solid fa-circle-check"></i> Validé</span>
+                        {% else %}
+                        <span
+                            style="color: var(--danger); font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;"><i
+                                class="fa-solid fa-circle-xmark"></i> Non Validé</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted" style="padding: 3rem;">
+                        <i class="fa-solid fa-folder-open"
+                            style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i><br>
+                        Vous n'avez pas encore de notes enregistrées.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Tab Switching Logic
+    function switchTab(tabId) {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+        // Add active class to clicked tab and corresponding pane
+        document.querySelector(`.tab-btn[onclick="switchTab('${tabId}')"]`)?.classList.add('active');
+        document.getElementById(tabId)?.classList.add('active');
+
+        // Redraw DataTables if they are already initialized
+        if ($.fn.DataTable) {
+            $('.datatable').each(function () {
+                if ($.fn.DataTable.isDataTable(this)) {
+                    $(this).DataTable().columns.adjust().responsive.recalc();
+                }
+            });
+        }
+    }
+
+    // Handle hash in URL for tab navigation
+    function handleHash() {
+        const hash = window.location.hash;
+        if (hash === '#notes') {
+            switchTab('notes_tab');
+            setTimeout(() => {
+                const element = document.getElementById('notes_tab');
+                if (element) {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            }, 100);
+        } else if (hash === '#profil' || hash === '') {
+            switchTab('synthese');
+            setTimeout(() => {
+                const element = document.getElementById('profil');
+                if (element && hash === '#profil') {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            }, 100);
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', handleHash);
+    window.addEventListener('hashchange', handleHash);
+
+    // Chart.js init for Synthese tab
+    const matieresData = {{ stats.details_matieres | tojson | safe }};
+    const labels = Object.keys(matieresData);
+    const data = Object.values(matieresData);
+    const getRootVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    const ctx = document.getElementById('notesChart')?.getContext('2d');
+    let chart;
+
+    function initChart() {
+        if (!ctx) return;
+        if (chart) chart.destroy();
+
+        const infoColor = getRootVar('--info') || '#0ea5e9';
+        const textColor = getRootVar('--text-main') || '#0f172a';
+        const borderColor = getRootVar('--border-color') || '#e2e8f0';
+
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Moyenne',
+                    data: data,
+                    backgroundColor: infoColor + 'cc',
+                    borderColor: infoColor,
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 20, grid: { color: borderColor }, ticks: { color: textColor, stepSize: 5 } },
+                    x: { grid: { display: false }, ticks: { color: textColor } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    if (labels.length > 0) {
+        initChart();
+        window.addEventListener('themeChanged', initChart);
+    } else if (ctx) {
+        document.getElementById('notesChart').parentElement.innerHTML = '<div style="display:flex; height:100%; justify-content:center; align-items:center;"><p class="text-muted">Pas encore assez de données graphiques.</p></div>';
+    }
+</script>
+{% endblock %}

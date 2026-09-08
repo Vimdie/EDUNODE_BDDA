@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Edunode{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Theme Management Script (run immediately to prevent flash) -->
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</head>
+
+<body>
+    <!-- Page Loader -->
+    <div id="page-loader" class="page-loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url_for('dashboards.dashboard') }}" class="navbar-brand">
+            <i class="fa-solid fa-graduation-cap"></i> Edunode
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" title="Basculer le thème">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
+            {% if session.get('user_id') %}
+            <span class="badge badge-info"><i class="fa-solid fa-user-shield"></i> {{ session.get('role')|capitalize
+                }}</span>
+
+            {% if session.get('role') == 'etudiant' %}
+            <a href="{{ url_for('dashboards.student_notes') }}"><i class="fa-solid fa-house"></i> Accueil Étudiant</a>
+            <a href="{{ url_for('dashboards.student_notes') }}#profil"><i class="fa-solid fa-user-edit"></i> Modifier
+                Profil</a>
+
+            {% elif session.get('role') == 'professeur' %}
+            <a href="{{ url_for('dashboards.prof_courses') }}"><i class="fa-solid fa-chalkboard-user"></i> Mes Cours</a>
+            <a href="{{ url_for('dashboards.prof_courses') }}#profil"><i class="fa-solid fa-user-edit"></i> Mon
+                Profil</a>
+
+            {% elif session.get('role') == 'admin' %}
+            <a href="{{ url_for('dashboards.admin_students') }}"><i class="fa-solid fa-chart-pie"></i> Tableau de
+                bord</a>
+            <a href="{{ url_for('dashboards.admin_students') }}#etudiants"><i class="fa-solid fa-users"></i>
+                Étudiants</a>
+            <a href="{{ url_for('dashboards.admin_students') }}#professeurs"><i
+                    class="fa-solid fa-chalkboard-teacher"></i> Professeurs</a>
+            {% endif %}
+
+            <a href="{{ url_for('auth.logout') }}" style="color: var(--danger);"><i
+                    class="fa-solid fa-right-from-bracket"></i> Quitter</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}"><i class="fa-solid fa-right-to-bracket"></i> Connexion</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Scripts -->
+    <!-- jQuery (required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Toastify -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Common logic -->
+    <script>
+        // Remove loader on window load
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                document.getElementById('page-loader').classList.add('hidden');
+            }, 300); // Small delay for smooth effect
+        });
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('i');
+
+        function updateThemeIcon() {
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                themeIcon.className = 'fa-solid fa-sun';
+            } else {
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        updateThemeIcon(); // Run on init
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+
+            // Trigger a custom event in case charts need to re-render
+            window.dispatchEvent(new Event('themeChanged'));
+        });
+
+        // Flash message handler using Toastify
+        {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        Toastify({
+            text: "{{ message }}",
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                background: "{{ 'var(--success)' if category == 'success' else 'var(--danger)' if category == 'danger' else 'var(--warning)' if category == 'warning' else 'var(--primary-color)' }}",
+                borderRadius: "var(--border-radius-md)",
+                fontFamily: "var(--font-family)",
+                boxShadow: "var(--shadow-md)"
+            }
+        }).showToast();
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        // Globally initialize all tables with 'datatable' class
+        $(document).ready(function () {
+            $('.datatable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+                },
+                "pageLength": 10,
+                "lengthChange": false
+            });
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

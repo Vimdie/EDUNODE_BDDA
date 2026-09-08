@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+{% block title %}Espace Professeur – {{ prof.prenom }} {{ prof.nom }} | Edunode{% endblock %}
+
+{% block content %}
+<style>
+    /* ── HERO BANNER ── */
+    .prof-hero {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem 2.5rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .prof-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+    }
+
+    .prof-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -60px;
+        right: 120px;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+    }
+
+    .prof-avatar {
+        width: 72px;
+        height: 72px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .prof-meta {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .prof-meta h1 {
+        color: white;
+        margin: 0 0 0.25rem 0;
+        font-size: 1.5rem;
+    }
+
+    .prof-meta p {
+        opacity: 0.8;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .prof-info-pills {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .prof-pill {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        padding: 0.3rem 0.9rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* ── QUICK STATS ── */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .qs-card {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .qs-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .qs-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
+
+    .qs-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .qs-icon {
+        font-size: 1.2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    /* ── COURSE CARDS GRID ── */
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .course-card {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-lg);
+        padding: 0;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .course-card-accent {
+        height: 5px;
+        background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    }
+
+    .course-card-body {
+        padding: 1.5rem;
+        flex: 1;
+    }
+
+    .course-card-subject {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 0.35rem;
+    }
+
+    .course-card-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .course-card-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .cs-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cs-item span:first-child {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+
+    .cs-item span:last-child {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .course-card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        background: var(--bg-color);
+    }
+
+    .action-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .chip-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .chip-primary:hover {
+        background: var(--primary-hover);
+        transform: scale(1.03);
+    }
+
+    .chip-outline {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+    }
+
+    .chip-outline:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    /* ── STUDENTS TABLE SECTION ── */
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title .count-badge {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+        font-weight: 700;
+    }
+</style>
+
+<!-- ── HERO ── -->
+<div class="prof-hero" id="profil">
+    <div class="prof-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+    <div class="prof-meta">
+        <h1>{{ prof.prenom }} {{ prof.nom }}</h1>
+        <p>{{ prof.email }}</p>
+        <div class="prof-info-pills">
+            <span class="prof-pill"><i class="fa-solid fa-medal"></i> {{ prof.grade }}</span>
+            <span class="prof-pill"><i class="fa-solid fa-circle-check"></i> {{ prof.statut }}</span>
+            <span class="prof-pill"><i class="fa-solid fa-calendar"></i> Depuis {{ prof.annee_embauche or 'N/A'
+                }}</span>
+            {% if prof.telephone %}
+            <span class="prof-pill"><i class="fa-solid fa-phone"></i> {{ prof.telephone }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ── QUICK STATS ── -->
+<div class="quick-stats">
+    <div class="qs-card">
+        <div class="qs-icon" style="color: var(--primary-color);"><i class="fa-solid fa-book-open"></i></div>
+        <div class="qs-label">Cours assignés</div>
+        <div class="qs-value">{{ stats.total_cours }}</div>
+    </div>
+    <div class="qs-card">
+        <div class="qs-icon" style="color: var(--success);"><i class="fa-solid fa-users"></i></div>
+        <div class="qs-label">Élèves encadrés</div>
+        <div class="qs-value">{{ stats.total_eleves }}</div>
+    </div>
+    <div class="qs-card">
+        <div class="qs-icon" style="color: var(--warning);"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div class="qs-label">Évaluations</div>
+        <div class="qs-value">{{ courses | length }}</div>
+    </div>
+</div>
+
+<!-- ── MES COURS (Cards) ── -->
+<div class="section-title" id="cours">
+    <i class="fa-solid fa-chalkboard" style="color: var(--primary-color);"></i>
+    Mes Cours
+    <span class="count-badge">{{ courses|length }}</span>
+    <span class="text-muted" style="font-size: 0.8rem; font-weight: 400; margin-left: 0.5rem;">
+        — Cliquez sur <strong>Gérer</strong> pour accéder aux notes et évaluations
+    </span>
+</div>
+
+{% if courses %}
+<div class="courses-grid">
+    {% for course in courses %}
+    <div class="course-card">
+        <div class="course-card-accent"></div>
+        <div class="course-card-body">
+            <div class="course-card-subject">
+                <i class="fa-solid fa-book" style="color: var(--primary-color); font-size: 0.9rem;"></i>
+                {{ course.matiere }}
+            </div>
+            <div class="course-card-meta">
+                <span class="badge badge-info" style="font-size: 0.8rem;">{{ course.classe }}</span>
+                <span><i class="fa-solid fa-calendar-alt"></i> {{ course.semestre }}</span>
+                <span><i class="fa-solid fa-laptop"></i> {{ course.mode_cours or 'Présentiel' }}</span>
+            </div>
+            <div class="course-card-stats">
+                <div class="cs-item">
+                    <span>Volume horaire</span>
+                    <span>{{ course.volume_horaire or '—' }}h</span>
+                </div>
+                <div class="cs-item">
+                    <span>Crédits</span>
+                    <span>{{ course.credit }}</span>
+                </div>
+            </div>
+            {% if course.description %}
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">{{ course.description }}</p>
+            {% endif %}
+        </div>
+        <div class="course-card-footer">
+            <a href="{{ url_for('dashboards.course_detail', ens_id=course.id) }}" class="action-chip chip-primary">
+                <i class="fa-solid fa-pen-to-square"></i> Gérer le cours
+            </a>
+            <a href="{{ url_for('dashboards.course_detail', ens_id=course.id) }}" class="action-chip chip-outline">
+                <i class="fa-solid fa-chart-bar"></i> Stats
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card text-center" style="padding: 3rem; color: var(--text-muted);">
+    <i class="fa-solid fa-chalkboard" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4;"></i>
+    <p>Aucun cours ne vous a été assigné pour le moment.</p>
+    <p style="font-size: 0.85rem;">Contactez l'administrateur pour qu'il vous assigne des cours.</p>
+</div>
+{% endif %}
+
+<!-- ── TOUS MES ÉLÈVES ── -->
+<div class="card" id="eleves">
+    <div class="card-header">
+        <div class="section-title" style="margin: 0;">
+            <i class="fa-solid fa-graduation-cap" style="color: var(--success);"></i>
+            Tous mes Élèves
+            <span class="count-badge" style="background: var(--success);">{{ students|length }}</span>
+        </div>
+        <span class="text-muted" style="font-size: 0.8rem;">Tous cours confondus</span>
+    </div>
+    <table class="datatable display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Classe</th>
+                <th>Matière</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td><code>{{ student.matricule }}</code></td>
+                <td>{{ student.nom }}</td>
+                <td>{{ student.prenom }}</td>
+                <td><span class="badge badge-info">{{ student.classe }}</span></td>
+                <td>{{ student.matiere }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-muted" style="padding: 2rem;">Aucun élève trouvé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

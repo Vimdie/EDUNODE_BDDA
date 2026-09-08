@@ -1,0 +1,260 @@
+    INFO: 2026-03-08 12:15:41,926:               log.py:   20: Logging to C:\Users\DELL\Desktop\BDD2_Projet\Rapports_Finaux\mdpdf.log
+   DEBUG: 2026-03-08 12:15:41,926:               cli.py:  103: Guide_Installation_Utilisation_Edunode.md
+    INFO: 2026-03-08 12:15:41,938:         converter.py:   14: Guide_Installation_Utilisation_Edunode.md
+   DEBUG: 2026-03-08 12:15:41,984:      pdf_renderer.py:  470: printSegment: Guide de Déploiement : Lancer Edunode depuis l
+   DEBUG: 2026-03-08 12:15:41,999:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,009:      pdf_renderer.py:  470: printSegment: Archive
+   DEBUG: 2026-03-08 12:15:42,013:      pdf_renderer.py:  470: printSegment: Bienvenue dans le projet 
+   DEBUG: 2026-03-08 12:15:42,021:      pdf_renderer.py:  470: printSegment: Edunode
+   DEBUG: 2026-03-08 12:15:42,030:      pdf_renderer.py:  470: printSegment:  (Base de Données 2).
+   DEBUG: 2026-03-08 12:15:42,034:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,046:      pdf_renderer.py:  470: printSegment: Ce document explique étape par étape comment configurer
+   DEBUG: 2026-03-08 12:15:42,049:      pdf_renderer.py:  470: printSegment: votre environnement pour faire tourner l
+   DEBUG: 2026-03-08 12:15:42,051:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,057:      pdf_renderer.py:  470: printSegment: application localement sur votre machine après avoir extrait l
+   DEBUG: 2026-03-08 12:15:42,059:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,063:      pdf_renderer.py:  470: printSegment: archive ZIP.
+   DEBUG: 2026-03-08 12:15:42,069:      pdf_renderer.py:  470: printSegment: Prérequis Système
+   DEBUG: 2026-03-08 12:15:42,074:      pdf_renderer.py:  470: printSegment: Avant de commencer, assurez-vous d
+   DEBUG: 2026-03-08 12:15:42,076:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,079:      pdf_renderer.py:  470: printSegment: avoir installé :
+   DEBUG: 2026-03-08 12:15:42,081:      pdf_renderer.py:  470: printSegment:  1 
+   DEBUG: 2026-03-08 12:15:42,086:      pdf_renderer.py:  470: printSegment: Python 3.9
+   DEBUG: 2026-03-08 12:15:42,092:      pdf_renderer.py:  470: printSegment:  (ou version supérieure).
+   DEBUG: 2026-03-08 12:15:42,094:      pdf_renderer.py:  470: printSegment:  2 
+   DEBUG: 2026-03-08 12:15:42,098:      pdf_renderer.py:  470: printSegment: Microsoft SQL Server
+   DEBUG: 2026-03-08 12:15:42,102:      pdf_renderer.py:  470: printSegment:  (Édition Developer ou Express).
+   DEBUG: 2026-03-08 12:15:42,106:      pdf_renderer.py:  470: printSegment:  3 
+   DEBUG: 2026-03-08 12:15:42,110:      pdf_renderer.py:  470: printSegment: SQL Server Management Studio (SSMS)
+   DEBUG: 2026-03-08 12:15:42,112:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,115:      pdf_renderer.py:  470: printSegment:  4 
+   DEBUG: 2026-03-08 12:15:42,121:      pdf_renderer.py:  470: printSegment: Pilote ODBC
+   DEBUG: 2026-03-08 12:15:42,124:      pdf_renderer.py:  470: printSegment:  : Le 
+   DEBUG: 2026-03-08 12:15:42,149:      pdf_renderer.py:  470: printSegment: ODBC Driver 17 for SQL Server
+   DEBUG: 2026-03-08 12:15:42,159:      pdf_renderer.py:  470: printSegment:  (généralement préinstallé sur Windows ou fourni
+   DEBUG: 2026-03-08 12:15:42,164:      pdf_renderer.py:  470: printSegment: avec SSMS).
+   DEBUG: 2026-03-08 12:15:42,172:      pdf_renderer.py:  470: printSegment: Étape 1 : Configuration de la Base de Données
+   DEBUG: 2026-03-08 12:15:42,177:      pdf_renderer.py:  470: printSegment: Puisque l
+   DEBUG: 2026-03-08 12:15:42,180:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,192:      pdf_renderer.py:  470: printSegment: application interagit fortement avec MS SQL Server, la base doit exister avant le lancement du code.
+   DEBUG: 2026-03-08 12:15:42,196:      pdf_renderer.py:  470: printSegment:  1 
+   DEBUG: 2026-03-08 12:15:42,200:      pdf_renderer.py:  470: printSegment: Ouvrez SSMS
+   DEBUG: 2026-03-08 12:15:42,207:      pdf_renderer.py:  470: printSegment:  et connectez-vous à votre instance locale de moteur de base de données (généralement 
+   DEBUG: 2026-03-08 12:15:42,213:      pdf_renderer.py:  470: printSegment: .\SQLEXPRESS
+   DEBUG: 2026-03-08 12:15:42,220:      pdf_renderer.py:  470: printSegment:  ou 
+   DEBUG: 2026-03-08 12:15:42,224:      pdf_renderer.py:  470: printSegment: localhost
+   DEBUG: 2026-03-08 12:15:42,227:      pdf_renderer.py:  470: printSegment: ).
+   DEBUG: 2026-03-08 12:15:42,229:      pdf_renderer.py:  470: printSegment:  2 
+   DEBUG: 2026-03-08 12:15:42,232:      pdf_renderer.py:  470: printSegment: Créer la base
+   DEBUG: 2026-03-08 12:15:42,235:      pdf_renderer.py:  470: printSegment:  : Dans 
+   DEBUG: 2026-03-08 12:15:42,238:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,241:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,244:      pdf_renderer.py:  470: printSegment: Explorateur d
+   DEBUG: 2026-03-08 12:15:42,247:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,250:      pdf_renderer.py:  470: printSegment: objets
+   DEBUG: 2026-03-08 12:15:42,254:      pdf_renderer.py:  470: printSegment:  à gauche, faites un clic droit sur le dossier 
+   DEBUG: 2026-03-08 12:15:42,256:      pdf_renderer.py:  470: printSegment: Bases de
+   DEBUG: 2026-03-08 12:15:42,258:      pdf_renderer.py:  470: printSegment: données
+   DEBUG: 2026-03-08 12:15:42,260:      pdf_renderer.py:  470: printSegment:  > 
+   DEBUG: 2026-03-08 12:15:42,263:      pdf_renderer.py:  470: printSegment: Nouvelle base de données...
+   DEBUG: 2026-03-08 12:15:42,266:      pdf_renderer.py:  470: printSegment:  3 
+   DEBUG: 2026-03-08 12:15:42,269:      pdf_renderer.py:  470: printSegment: Nommez la base
+   DEBUG: 2026-03-08 12:15:42,272:      pdf_renderer.py:  470: printSegment:  : Saisissez EXACTEMENT 
+   DEBUG: 2026-03-08 12:15:42,276:      pdf_renderer.py:  470: printSegment: BDD2_Projet
+   DEBUG: 2026-03-08 12:15:42,282:      pdf_renderer.py:  470: printSegment:  et cliquez sur OK.
+   DEBUG: 2026-03-08 12:15:42,286:      pdf_renderer.py:  470: printSegment:  4 
+   DEBUG: 2026-03-08 12:15:42,290:      pdf_renderer.py:  470: printSegment: Importer la structure (Les Tables)
+   DEBUG: 2026-03-08 12:15:42,293:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,296:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,306:      pdf_renderer.py:  470: printSegment: Cliquez sur 
+   DEBUG: 2026-03-08 12:15:42,313:      pdf_renderer.py:  470: printSegment: "
+   DEBUG: 2026-03-08 12:15:42,316:      pdf_renderer.py:  470: printSegment: Nouvelle requête
+   DEBUG: 2026-03-08 12:15:42,319:      pdf_renderer.py:  470: printSegment: "
+   DEBUG: 2026-03-08 12:15:42,323:      pdf_renderer.py:  470: printSegment:  (en haut).
+   DEBUG: 2026-03-08 12:15:42,326:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,329:      pdf_renderer.py:  470: printSegment: Assurez-vous d
+   DEBUG: 2026-03-08 12:15:42,333:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,337:      pdf_renderer.py:  470: printSegment: avoir choisi la base 
+   DEBUG: 2026-03-08 12:15:42,341:      pdf_renderer.py:  470: printSegment: BDD2_Projet
+   DEBUG: 2026-03-08 12:15:42,345:      pdf_renderer.py:  470: printSegment:  dans la liste déroulante (et non 
+   DEBUG: 2026-03-08 12:15:42,348:      pdf_renderer.py:  470: printSegment: master
+   DEBUG: 2026-03-08 12:15:42,351:      pdf_renderer.py:  470: printSegment: ).
+   DEBUG: 2026-03-08 12:15:42,355:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,359:      pdf_renderer.py:  470: printSegment: Ouvrez le script DDL 
+   DEBUG: 2026-03-08 12:15:42,363:      pdf_renderer.py:  470: printSegment: ScriptSQL.sql
+   DEBUG: 2026-03-08 12:15:42,382:      pdf_renderer.py:  470: printSegment:  (ou copiez tout son contenu), collez-le
+   DEBUG: 2026-03-08 12:15:42,388:      pdf_renderer.py:  470: printSegment: dans la fenêtre et appuyez sur 
+   DEBUG: 2026-03-08 12:15:42,392:      pdf_renderer.py:  470: printSegment: Exécuter
+   DEBUG: 2026-03-08 12:15:42,395:      pdf_renderer.py:  470: printSegment:  (ou F5).
+   DEBUG: 2026-03-08 12:15:42,399:      pdf_renderer.py:  470: printSegment:  5 
+   DEBUG: 2026-03-08 12:15:42,402:      pdf_renderer.py:  470: printSegment: Importer les données (Le Mock)
+   DEBUG: 2026-03-08 12:15:42,406:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,410:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,417:      pdf_renderer.py:  470: printSegment: Effacez la requête et remplacez par le contenu du fichier 
+   DEBUG: 2026-03-08 12:15:42,421:      pdf_renderer.py:  470: printSegment: test_data.sql
+   DEBUG: 2026-03-08 12:15:42,424:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,428:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,431:      pdf_renderer.py:  470: printSegment: Cliquez sur 
+   DEBUG: 2026-03-08 12:15:42,436:      pdf_renderer.py:  470: printSegment: Exécuter
+   DEBUG: 2026-03-08 12:15:42,445:      pdf_renderer.py:  470: printSegment: . Votre base contient désormais des fiches d
+   DEBUG: 2026-03-08 12:15:42,451:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,460:      pdf_renderer.py:  470: printSegment: étudiants, professeurs
+   DEBUG: 2026-03-08 12:15:42,467:      pdf_renderer.py:  470: printSegment: et directeurs 
+   DEBUG: 2026-03-08 12:15:42,470:      pdf_renderer.py:  470: printSegment: !
+   DEBUG: 2026-03-08 12:15:42,479:      pdf_renderer.py:  470: printSegment: Étape 2 : Sécuriser la Connexion (SQL Server)
+   DEBUG: 2026-03-08 12:15:42,484:      pdf_renderer.py:  470: printSegment: Le fichier 
+   DEBUG: 2026-03-08 12:15:42,492:      pdf_renderer.py:  470: printSegment: config.py
+   DEBUG: 2026-03-08 12:15:42,499:      pdf_renderer.py:  470: printSegment:  du code Python attend un utilisateur précis appelé 
+   DEBUG: 2026-03-08 12:15:42,503:      pdf_renderer.py:  470: printSegment: UserFlask
+   DEBUG: 2026-03-08 12:15:42,515:      pdf_renderer.py:  470: printSegment:  pour se connecter au SGBD.
+   DEBUG: 2026-03-08 12:15:42,519:      pdf_renderer.py:  470: printSegment: Vous devez le créer.
+   DEBUG: 2026-03-08 12:15:42,524:      pdf_renderer.py:  470: printSegment:  1 
+   DEBUG: 2026-03-08 12:15:42,532:      pdf_renderer.py:  470: printSegment: Toujours dans SSMS (Explorateur d
+   DEBUG: 2026-03-08 12:15:42,537:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,541:      pdf_renderer.py:  470: printSegment: objets), développez 
+   DEBUG: 2026-03-08 12:15:42,543:      pdf_renderer.py:  470: printSegment: Sécurité
+   DEBUG: 2026-03-08 12:15:42,546:      pdf_renderer.py:  470: printSegment:  puis faites un clic droit sur 
+   DEBUG: 2026-03-08 12:15:42,548:      pdf_renderer.py:  470: printSegment: Connexions
+   DEBUG: 2026-03-08 12:15:42,551:      pdf_renderer.py:  470: printSegment:  > 
+   DEBUG: 2026-03-08 12:15:42,556:      pdf_renderer.py:  470: printSegment: Nouvelle connexion...
+   DEBUG: 2026-03-08 12:15:42,559:      pdf_renderer.py:  470: printSegment:  2 
+   DEBUG: 2026-03-08 12:15:42,562:      pdf_renderer.py:  470: printSegment: Page Général
+   DEBUG: 2026-03-08 12:15:42,565:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,567:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,570:      pdf_renderer.py:  470: printSegment: Nom de connexion : Tapez 
+   DEBUG: 2026-03-08 12:15:42,574:      pdf_renderer.py:  470: printSegment: UserFlask
+   DEBUG: 2026-03-08 12:15:42,577:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,581:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,584:      pdf_renderer.py:  470: printSegment: Cochez 
+   DEBUG: 2026-03-08 12:15:42,589:      pdf_renderer.py:  470: printSegment: Authentification SQL Server
+   DEBUG: 2026-03-08 12:15:42,592:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,594:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,598:      pdf_renderer.py:  470: printSegment: Mot de passe : Tapez 
+   DEBUG: 2026-03-08 12:15:42,602:      pdf_renderer.py:  470: printSegment: ISE2_2026
+   DEBUG: 2026-03-08 12:15:42,606:      pdf_renderer.py:  470: printSegment:  (Confirmez-le).
+   DEBUG: 2026-03-08 12:15:42,609:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,613:      pdf_renderer.py:  470: printSegment: Décochez
+   DEBUG: 2026-03-08 12:15:42,617:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,620:      pdf_renderer.py:  470: printSegment: "
+   DEBUG: 2026-03-08 12:15:42,624:      pdf_renderer.py:  470: printSegment: Conserver l
+   DEBUG: 2026-03-08 12:15:42,627:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,632:      pdf_renderer.py:  470: printSegment: expiration du mot de passe
+   DEBUG: 2026-03-08 12:15:42,635:      pdf_renderer.py:  470: printSegment: "
+   DEBUG: 2026-03-08 12:15:42,639:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,643:      pdf_renderer.py:  470: printSegment:  3 
+   DEBUG: 2026-03-08 12:15:42,647:      pdf_renderer.py:  470: printSegment: Page Rôles de serveur
+   DEBUG: 2026-03-08 12:15:42,650:      pdf_renderer.py:  470: printSegment:  (à gauche) :
+   DEBUG: 2026-03-08 12:15:42,652:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,655:      pdf_renderer.py:  470: printSegment: Cochez 
+   DEBUG: 2026-03-08 12:15:42,658:      pdf_renderer.py:  470: printSegment: sysadmin
+   DEBUG: 2026-03-08 12:15:42,664:      pdf_renderer.py:  470: printSegment:  (ou a minima des droits 
+   DEBUG: 2026-03-08 12:15:42,669:      pdf_renderer.py:  470: printSegment: db_owner
+   DEBUG: 2026-03-08 12:15:42,672:      pdf_renderer.py:  470: printSegment:  sur 
+   DEBUG: 2026-03-08 12:15:42,674:      pdf_renderer.py:  470: printSegment: BDD2
+   DEBUG: 2026-03-08 12:15:42,677:      pdf_renderer.py:  470: printSegment: _
+   DEBUG: 2026-03-08 12:15:42,680:      pdf_renderer.py:  470: printSegment: Projet
+   DEBUG: 2026-03-08 12:15:42,682:      pdf_renderer.py:  470: printSegment: ).
+   DEBUG: 2026-03-08 12:15:42,685:      pdf_renderer.py:  470: printSegment:  4 
+   DEBUG: 2026-03-08 12:15:42,688:      pdf_renderer.py:  470: printSegment: Cliquez sur 
+   DEBUG: 2026-03-08 12:15:42,690:      pdf_renderer.py:  470: printSegment: OK
+   DEBUG: 2026-03-08 12:15:42,693:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,696:      pdf_renderer.py:  470: printSegment: (Note : Si votre instance ne s
+   DEBUG: 2026-03-08 12:15:42,699:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,702:      pdf_renderer.py:  470: printSegment: appelle pas 
+   DEBUG: 2026-03-08 12:15:42,704:      pdf_renderer.py:  470: printSegment: .\BDD2_PROJET
+   DEBUG: 2026-03-08 12:15:42,707:      pdf_renderer.py:  470: printSegment: , ouvrez le fichier 
+   DEBUG: 2026-03-08 12:15:42,710:      pdf_renderer.py:  470: printSegment: config.py
+   DEBUG: 2026-03-08 12:15:42,716:      pdf_renderer.py:  470: printSegment:  dans le dossier source
+   DEBUG: 2026-03-08 12:15:42,719:      pdf_renderer.py:  470: printSegment: et remplacez la valeur de 
+   DEBUG: 2026-03-08 12:15:42,721:      pdf_renderer.py:  470: printSegment: SQL_SERVER
+   DEBUG: 2026-03-08 12:15:42,724:      pdf_renderer.py:  470: printSegment:  à la ligne 9 par votre vraie instance, par exemple 
+   DEBUG: 2026-03-08 12:15:42,725:      pdf_renderer.py:  470: printSegment: .\SQLEXPRESS
+   DEBUG: 2026-03-08 12:15:42,727:      pdf_renderer.py:  470: printSegment: ).
+   DEBUG: 2026-03-08 12:15:42,730:      pdf_renderer.py:  470: printSegment: Étape 3 : Lancement de l
+   DEBUG: 2026-03-08 12:15:42,732:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,734:      pdf_renderer.py:  470: printSegment: Application Python
+   DEBUG: 2026-03-08 12:15:42,747:      pdf_renderer.py:  470: printSegment: Une fois le dossier du projet ouvert dans un terminal (invite de commandes ou VS Code), exécutez les commandes
+   DEBUG: 2026-03-08 12:15:42,749:      pdf_renderer.py:  470: printSegment: suivantes pour isoler et lancer le code.
+   DEBUG: 2026-03-08 12:15:42,751:      pdf_renderer.py:  470: printSegment:  1 
+   DEBUG: 2026-03-08 12:15:42,753:      pdf_renderer.py:  470: printSegment: Création d
+   DEBUG: 2026-03-08 12:15:42,755:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,758:      pdf_renderer.py:  470: printSegment: un environnement virtuel (Recommandé)
+   DEBUG: 2026-03-08 12:15:42,760:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,763:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,765:      pdf_renderer.py:  470: printSegment: python -m venv venv
+   DEBUG: 2026-03-08 12:15:42,767:      pdf_renderer.py:  470: printSegment:  2 
+   DEBUG: 2026-03-08 12:15:42,769:      pdf_renderer.py:  470: printSegment: Activation de l
+   DEBUG: 2026-03-08 12:15:42,772:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,775:      pdf_renderer.py:  470: printSegment: environnement virtuel
+   DEBUG: 2026-03-08 12:15:42,777:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,779:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,782:      pdf_renderer.py:  470: printSegment: Sur Windows CMD : 
+   DEBUG: 2026-03-08 12:15:42,784:      pdf_renderer.py:  470: printSegment: venv\Scripts\activate.bat
+   DEBUG: 2026-03-08 12:15:42,787:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:42,789:      pdf_renderer.py:  470: printSegment: Sur Windows PowerShell : 
+   DEBUG: 2026-03-08 12:15:42,791:      pdf_renderer.py:  470: printSegment: .\venv\Scripts\Activate.ps1
+   DEBUG: 2026-03-08 12:15:42,793:      pdf_renderer.py:  470: printSegment:  3 
+   DEBUG: 2026-03-08 12:15:42,795:      pdf_renderer.py:  470: printSegment: Installation des dépendances
+   DEBUG: 2026-03-08 12:15:42,797:      pdf_renderer.py:  470: printSegment:  : Le projet nécessite Flask et PyODBC.
+   DEBUG: 2026-03-08 12:15:42,799:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,801:      pdf_renderer.py:  470: printSegment: pip install Flask
+   DEBUG: 2026-03-08 12:15:42,802:      pdf_renderer.py:  470: printSegment: pyodbc
+   DEBUG: 2026-03-08 12:15:42,804:      pdf_renderer.py:  470: printSegment:  4 
+   DEBUG: 2026-03-08 12:15:42,808:      pdf_renderer.py:  470: printSegment: Démarrage du Serveur Local
+   DEBUG: 2026-03-08 12:15:42,811:      pdf_renderer.py:  470: printSegment:  :
+   DEBUG: 2026-03-08 12:15:42,813:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,814:      pdf_renderer.py:  470: printSegment: python app.py
+   DEBUG: 2026-03-08 12:15:42,816:      pdf_renderer.py:  470: printSegment: Si l
+   DEBUG: 2026-03-08 12:15:42,817:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:42,821:      pdf_renderer.py:  470: printSegment: opération est réussie, le terminal affichera : 
+   DEBUG: 2026-03-08 12:15:42,823:      pdf_renderer.py:  470: printSegment: Running on http://127.0.0.1:5000
+   DEBUG: 2026-03-08 12:15:42,825:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,828:      pdf_renderer.py:  470: printSegment: Étape 4 : Utilisation et Comptes de Démo
+   DEBUG: 2026-03-08 12:15:42,831:      pdf_renderer.py:  470: printSegment: Ouvrez votre navigateur web et rendez-vous sur : 
+   DEBUG: 2026-03-08 12:15:42,834:      pdf_renderer.py:  470: printSegment: http://127.0.0.1:5000/
+   DEBUG: 2026-03-08 12:15:42,836:      pdf_renderer.py:  470: printSegment: .
+   DEBUG: 2026-03-08 12:15:42,839:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:42,851:      pdf_renderer.py:  470: printSegment: Sur la page de connexion, vous pouvez
+   DEBUG: 2026-03-08 12:15:42,856:      pdf_renderer.py:  470: printSegment: utiliser ces identifiants de test pré-générés pour visiter les différents profils :
+   DEBUG: 2026-03-08 12:15:42,859:      pdf_renderer.py:  470: printSegment: 👤 
+   DEBUG: 2026-03-08 12:15:43,318:      pdf_renderer.py:  470: printSegment: Profil Étudiant
+   DEBUG: 2026-03-08 12:15:43,322:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,326:      pdf_renderer.py:  470: printSegment: Email : 
+   DEBUG: 2026-03-08 12:15:43,329:      pdf_renderer.py:  470: printSegment: etudiant1@ecole.com
+   DEBUG: 2026-03-08 12:15:43,332:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,335:      pdf_renderer.py:  470: printSegment: Mot de passe : 
+   DEBUG: 2026-03-08 12:15:43,339:      pdf_renderer.py:  470: printSegment: 1234
+   DEBUG: 2026-03-08 12:15:43,342:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:43,347:      pdf_renderer.py:  470: printSegment: (Donne accès aux parcours de notes, progression et modification de détails
+   DEBUG: 2026-03-08 12:15:43,350:      pdf_renderer.py:  470: printSegment: profil)
+   DEBUG: 2026-03-08 12:15:43,352:      pdf_renderer.py:  470: printSegment: 🎓 
+   DEBUG: 2026-03-08 12:15:43,355:      pdf_renderer.py:  470: printSegment: Profil Professeur
+   DEBUG: 2026-03-08 12:15:43,358:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,361:      pdf_renderer.py:  470: printSegment: Email : 
+   DEBUG: 2026-03-08 12:15:43,364:      pdf_renderer.py:  470: printSegment: professeur1@ecole.com
+   DEBUG: 2026-03-08 12:15:43,366:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,369:      pdf_renderer.py:  470: printSegment: Mot de passe : 
+   DEBUG: 2026-03-08 12:15:43,372:      pdf_renderer.py:  470: printSegment: 1234
+   DEBUG: 2026-03-08 12:15:43,373:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:43,377:      pdf_renderer.py:  470: printSegment: (Donne accès aux différentes matières enseignées et aux évaluations encadrées)
+   DEBUG: 2026-03-08 12:15:43,378:      pdf_renderer.py:  470: printSegment: 👑 
+   DEBUG: 2026-03-08 12:15:43,382:      pdf_renderer.py:  470: printSegment: Profil Administrateur (Directeur)
+   DEBUG: 2026-03-08 12:15:43,385:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,387:      pdf_renderer.py:  470: printSegment: Email : 
+   DEBUG: 2026-03-08 12:15:43,389:      pdf_renderer.py:  470: printSegment: admin1@ecole.com
+   DEBUG: 2026-03-08 12:15:43,391:      pdf_renderer.py:  470: printSegment: l
+   DEBUG: 2026-03-08 12:15:43,394:      pdf_renderer.py:  470: printSegment: Mot de passe : 
+   DEBUG: 2026-03-08 12:15:43,397:      pdf_renderer.py:  470: printSegment: 1234
+   DEBUG: 2026-03-08 12:15:43,399:      pdf_renderer.py:  470: printSegment:  
+   DEBUG: 2026-03-08 12:15:43,401:      pdf_renderer.py:  470: printSegment: (Donne l
+   DEBUG: 2026-03-08 12:15:43,404:      pdf_renderer.py:  470: printSegment: '
+   DEBUG: 2026-03-08 12:15:43,408:      pdf_renderer.py:  470: printSegment: accès total au SGBD : Listes des Profs, Synthèses Graphiques et édition)
+   DEBUG: 2026-03-08 12:15:43,413:      pdf_renderer.py:  470: printSegment: 🚀 
+   DEBUG: 2026-03-08 12:15:44,273:      pdf_renderer.py:  470: printSegment: Vous êtes désormais prêt(e) à évaluer Edunode et naviguer librement sur la plateforme 
+   DEBUG: 2026-03-08 12:15:44,276:      pdf_renderer.py:  470: printSegment: !
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 0, [1, 'Guide de Déploiement : Lancer Edunode depuis l', 1, 68.0]
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 1, [2, 'Prérequis Système', 1, 148.0]
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 2, [2, 'Étape 1 : Configuration de la Base de Données', 1, 283.6]
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 3, [2, 'Étape 2 : Sécuriser la Connexion (SQL Server)', 1, 563.2]
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 4, [2, 'Étape 3 : Lancement de l', 2, 182.8]
+   DEBUG: 2026-03-08 12:15:44,280:      pdf_renderer.py:   53: 5, [2, 'Étape 4 : Utilisation et Comptes de Démo', 2, 384.40000000000003]
